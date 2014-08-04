@@ -1,6 +1,7 @@
 package org.rayjars.appdirect;
 
 import net.oauth.*;
+import net.oauth.server.OAuthServlet;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
@@ -32,9 +33,11 @@ public final class OAuth {
 
         try {
             logger.debug("Request Method {} - URL {}",request.getMethod(), request.getRequestURL().toString());
-
+            logger.debug("Request consumerKey {} - consumerSecret {}",consumerKey, consumerSecret);
             //we shouldnt pass url parameters, Authorization is in the header
-            OAuthMessage oauthMessage = new OAuthMessage(request.getMethod(), request.getRequestURL().toString(), getParameters(request));
+            //OAuthMessage oauthMessage = new OAuthMessage(request.getMethod(), request.getRequestURL().toString(), getParameters(request));
+
+            OAuthMessage oauthMessage= OAuthServlet.getMessage(request, null);
 
             //OAuthServlet.getMessage(request, null);
             OAuthConsumer consumer = new OAuthConsumer(null, consumerKey, consumerSecret, null);

@@ -23,7 +23,7 @@ public class HeaderAuthorizationHandler extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException, UnknownErrorException {
-        System.out.println("{HeaderAuthorizationHandler start}");
+
         try {
             oAuth.validate(request);
         } catch (UnauthorizedException e) {
