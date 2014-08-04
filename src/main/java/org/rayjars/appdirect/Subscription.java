@@ -20,8 +20,6 @@ public class Subscription {
 
     private STATUS status = STATUS.ACTIVE;
 
-    private Integer maxUser;
-
     private Company company;
 
     private Order subscription;
@@ -48,7 +46,7 @@ public class Subscription {
     }
 
     public Integer getMaxUser(){
-        Integer max = 0;
+        Integer max = Integer.MAX_VALUE;
         for(Item item : subscription.getItems()){
             if(item.getUnit().equalsIgnoreCase(USER)){
                 max = item.getQuantity();
@@ -97,7 +95,6 @@ public class Subscription {
     public STATUS getStatus() {
         return status;
     }
-
 
     public Company getCompany() {
         return company;

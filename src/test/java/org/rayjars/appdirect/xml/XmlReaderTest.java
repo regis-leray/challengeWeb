@@ -66,6 +66,13 @@ public class XmlReaderTest {
         assertThat(event.getPayload().getUser().getLastName()).isEqualTo("DummyLast");
     }
 
+    @Test
+    public void shouldReadNotice() throws Exception {
+        URL resource = this.getClass().getResource("/dummyNotice.xml");
+        Event event = reader.read(resource.toString(), Event.class);
 
+        assertThat(event.getPayload().getAccount().getAccountIdentifier()).isEqualTo("MY_ACCOUNT");
+        assertThat(event.getPayload().getNotice().getType()).isEqualTo("DEACTIVATED");
+    }
 
 }

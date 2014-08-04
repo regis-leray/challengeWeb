@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.*;
 
 
 
-@XmlType(propOrder = {"company","configuration","account","order" ,"user"})
+@XmlType(propOrder = {"company","configuration","account","order" ,"user", "notice"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name="payload")
 public class Payload {
@@ -20,6 +20,18 @@ public class Payload {
 	
 	@XmlElement(name="user")
 	private User user;
+
+    @XmlElement
+    private Notice notice;
+
+
+    public Notice getNotice() {
+        return notice;
+    }
+
+    public void setNotice(Notice notice) {
+        this.notice = notice;
+    }
 
     public Account getAccount() {
 		return account;

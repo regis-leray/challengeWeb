@@ -1,17 +1,15 @@
 package org.rayjars.appdirect;
 
 import net.oauth.*;
-import net.oauth.server.HttpRequestMessage;
-import net.oauth.server.OAuthServlet;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
-import oauth.signpost.signature.AuthorizationHeaderSigningStrategy;
 import oauth.signpost.signature.QueryStringSigningStrategy;
-import org.apache.http.protocol.HTTP;
 import org.rayjars.appdirect.exceptions.UnauthorizedException;
 import org.rayjars.appdirect.exceptions.UnknownErrorException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,9 +18,10 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Map;
 
 public final class OAuth {
+
+    final Logger logger = LoggerFactory.getLogger(OAuth.class);
 
     private String consumerSecret;
 
@@ -84,6 +83,8 @@ public final class OAuth {
                 if (!"realm".equalsIgnoreCase(parameter.getKey())) {
                     list.add(parameter);
                 }
+
+                logger.debug("{Authorization header - key = {}, value = {}, ", parameter.getKey(), parameter.getValue());
             }
         }
 

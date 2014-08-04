@@ -33,7 +33,7 @@ public class OAuthTest {
         assertThat(urlSigned).contains("oauth_signature");
     }
 
-    @Ignore("Sometimes if failed / sometime not ")
+    //@Ignore("Sometimes if failed / sometime not ")
     @Test
     public void shouldValidate() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "/subscription/order");

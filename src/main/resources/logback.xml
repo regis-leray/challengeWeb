@@ -4,6 +4,8 @@
     <logger name="org.springframework"  level="info" />
     <logger name="org.hibernate.tool"   level="error" />
 
+    <logger name="org.rayjars.appdirect.OAuth"   level="debug" />
+
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <Pattern>%d{HH:mm:ss.SSS} %-5level %logger - %msg%n</Pattern>
