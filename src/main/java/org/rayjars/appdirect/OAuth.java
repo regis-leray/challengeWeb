@@ -31,6 +31,9 @@ public final class OAuth {
     public void validate(HttpServletRequest request) throws UnauthorizedException {
 
         try {
+            logger.debug("Request URL {}", request.getRequestURL().toString());
+
+
             //we shouldnt pass url parameters, Authorization is in the header
             OAuthMessage oauthMessage = new OAuthMessage("GET", request.getRequestURL().toString(), getParameters(request));
 
@@ -40,6 +43,8 @@ public final class OAuth {
             SimpleOAuthValidator validator = new SimpleOAuthValidator();
             validator.validateMessage(oauthMessage,accessor);
         } catch (OAuthException | URISyntaxException | IOException  e) {
+            logger.error("Failed to validate {}", e.getMessage());
+
             throw new UnauthorizedException(e.getMessage());
         }
     }
@@ -83,7 +88,6 @@ public final class OAuth {
                 if (!"realm".equalsIgnoreCase(parameter.getKey())) {
                     list.add(parameter);
                 }
-                System.out.println("{Authorization header - key = "+ parameter.getKey()+", value = "+parameter.getValue()+"");
                 logger.debug("{Authorization header - key = {}, value = {}, ", parameter.getKey(), parameter.getValue());
             }
         }
