@@ -83,7 +83,7 @@ public final class OAuth {
                 if (!"realm".equalsIgnoreCase(parameter.getKey())) {
                     list.add(parameter);
                 }
-
+                System.out.println("{Authorization header - key = "+ parameter.getKey()+", value = "+parameter.getValue()+"");
                 logger.debug("{Authorization header - key = {}, value = {}, ", parameter.getKey(), parameter.getValue());
             }
         }
