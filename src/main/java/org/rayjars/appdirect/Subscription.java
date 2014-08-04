@@ -22,7 +22,7 @@ public class Subscription {
 
     private Company company;
 
-    private Order subscription;
+    private Order order;
 
     private Map<String, User> users = new HashMap<String, User>();
 
@@ -36,18 +36,18 @@ public class Subscription {
         return this;
     }
 
-    public Order getSubscription() {
-        return subscription;
+    public Order getOrder() {
+        return order;
     }
 
-    public Subscription setSubscription(Order subscription) {
-        this.subscription = subscription;
+    public Subscription setOrder(Order order) {
+        this.order = order;
         return this;
     }
 
     public Integer getMaxUser(){
         Integer max = Integer.MAX_VALUE;
-        for(Item item : subscription.getItems()){
+        for(Item item : order.getItems()){
             if(item.getUnit().equalsIgnoreCase(USER)){
                 max = item.getQuantity();
                 break;

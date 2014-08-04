@@ -16,9 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
 
 public final class OAuth {
 
@@ -34,16 +31,13 @@ public final class OAuth {
         try {
             logger.debug("Request Method {} - URL {}",request.getMethod(), request.getRequestURL().toString());
             logger.debug("Request consumerKey {} - consumerSecret {}",consumerKey, consumerSecret);
-            //we shouldnt pass url parameters, Authorization is in the header
-            //OAuthMessage oauthMessage = new OAuthMessage(request.getMethod(), request.getRequestURL().toString(), getParameters(request));
 
             OAuthMessage oauthMessage= OAuthServlet.getMessage(request, null);
 
             //OAuthServlet.getMessage(request, null);
             OAuthConsumer consumer = new OAuthConsumer(null, consumerKey, consumerSecret, null);
             OAuthAccessor accessor = new OAuthAccessor(consumer);
-            SimpleOAuthValidator validator = new SimpleOAuthValidator();
-            validator.validateMessage(oauthMessage,accessor);
+            new SimpleOAuthValidator().validateMessage(oauthMessage, accessor);
         } catch (OAuthException | URISyntaxException | IOException  e) {
             logger.error("Failed to validate {}", e.getMessage());
 
@@ -70,30 +64,5 @@ public final class OAuth {
     @Value("${CONSUMER_KEY}")
     public void setConsumerKey(String consumerKey) {
         this.consumerKey = consumerKey;
-    }
-
-
-    /**
-     * only header parameters
-     *
-     * @param request
-     *
-     * @return clean parameters of the request
-     */
-    private List<net.oauth.OAuth.Parameter> getParameters(HttpServletRequest request) {
-        List<net.oauth.OAuth.Parameter> list = new ArrayList<net.oauth.OAuth.Parameter>();
-        for (Enumeration<String> headers = request.getHeaders("Authorization"); headers != null
-                && headers.hasMoreElements();) {
-            String header = headers.nextElement();
-            for (net.oauth.OAuth.Parameter parameter : OAuthMessage
-                    .decodeAuthorization(header)) {
-                if (!"realm".equalsIgnoreCase(parameter.getKey())) {
-                    list.add(parameter);
-                }
-                logger.debug("{Authorization header - key = {}, value = {}, ", parameter.getKey(), parameter.getValue());
-            }
-        }
-
-        return list;
     }
 }

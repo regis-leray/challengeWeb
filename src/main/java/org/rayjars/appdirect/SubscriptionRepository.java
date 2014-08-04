@@ -40,11 +40,11 @@ public class SubscriptionRepository {
         return accounts.containsKey(id);
     }
 
-	public void delete(String id)
+	public void cancel(String id)
 			throws AccountNotFoundException {
 
-        find(id);
-        accounts.remove(id);
+        Subscription sub = find(id);
+        sub.setStatus(Subscription.STATUS.CANCELLED);
 	}
 
 	public List<Subscription> all() {
@@ -53,7 +53,7 @@ public class SubscriptionRepository {
 
     public Subscription update(String id, Order order) throws AccountNotFoundException {
         Subscription found = find(id);
-        found.setSubscription(order);
+        found.setOrder(order);
         return found;
     }
 
@@ -81,7 +81,7 @@ public class SubscriptionRepository {
         Subscription found = find(id);
 
         if(!found.removeUser(user)){
-            throw new UserNotFoundException("Cannot delete the user with id "+user.getUuid());
+            throw new UserNotFoundException("Cannot cancel the user with id "+user.getUuid());
         }
 
     }

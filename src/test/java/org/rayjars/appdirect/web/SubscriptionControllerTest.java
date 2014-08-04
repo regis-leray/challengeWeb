@@ -142,7 +142,7 @@ public class SubscriptionControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_XML))
                 .andExpect(xpath("/result/success").booleanValue(true))
-                .andExpect(xpath("/result/message").string(containsString("The subscription has been deleted")))
+                .andExpect(xpath("/result/message").string(containsString("The subscription has been canceled")))
                 .andExpect(xpath("/result/errorCode").doesNotExist());
     }
 
@@ -152,7 +152,7 @@ public class SubscriptionControllerTest {
         Event event = emptyEvent();
         event.getPayload().setAccount(new Account("1234"));
         when(xmlReader.read(anyString(), Matchers.<Class<Object>>any())).thenReturn(event);
-        doThrow(new AccountNotFoundException("Not found subscription with 1234")).when(accountDao).delete(anyString());
+        doThrow(new AccountNotFoundException("Not found subscription with 1234")).when(accountDao).cancel(anyString());
 
         mockMvc.perform(get("/subscription/cancel")
                 .param("url", "https://www.appdirect.com/rest/api/events/dummyCancel")

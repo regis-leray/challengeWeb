@@ -17,29 +17,31 @@
 
 
     <div class="container">
-        <h1>Accounts</h1>
+        <h1>Subscriptions</h1>
 
         <hr>
         <table class="table">
             <thead>
             <tr>
                 <th>#</th>
-                <th>Subscription - Edition Code</th>
-                <th>Subscription - Pricing Duration</th>
+                <th>status</th>
+                <th>Edition Code</th>
+                <th>Pricing Duration</th>
                 <th>Subscription - Items : quantity (unit)</th>
+
                 <th>Users assign</th>
             </tr>
             </thead>
             <tbody>
 
-            <c:forEach items="${accounts}" var="account">
+            <c:forEach items="${subscriptions}" var="sub">
                 <tr>
-                    <td>${ account.id } </td>
-
-                    <td>${ account.subscription.editionCode }</td>
-                    <td>${ account.subscription.pricingDuration } </td>
-                    <td><c:forEach items="${account.subscription.items}" var="item"> ${ item.quantity } (${ item.unit }) , </c:forEach></td>
-                    <td><c:forEach items="${account.users}" var="user"> ${ user.uuid } (${ user.email }) , </c:forEach></td>
+                    <td>${ sub.id } </td>
+                    <td>${ sub.status } </td>
+                    <td>${ sub.order.editionCode }</td>
+                    <td>${ sub.order.pricingDuration } </td>
+                    <td><c:forEach items="${sub.order.items}" var="item"> ${ item.quantity } (${ item.unit }) , </c:forEach></td>
+                    <td><c:forEach items="${sub.users}" var="user"> ${ user.uuid } (${ user.email }) , </c:forEach></td>
                </tr>
             </c:forEach>
             </tbody>

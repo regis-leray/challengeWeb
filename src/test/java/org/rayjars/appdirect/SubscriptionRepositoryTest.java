@@ -26,7 +26,7 @@ public class SubscriptionRepositoryTest {
     public void createDao() {
         HashMap<String, Subscription> accounts = new HashMap<String, Subscription>();
         Order subscription = new Order().setItems(Lists.newArrayList(new Item().setQuantity(2).setUnit("USER")));
-        Subscription accountDomain = new Subscription().setId("1234").setSubscription(subscription);
+        Subscription accountDomain = new Subscription().setId("1234").setOrder(subscription);
         accountDomain.addUser(new User("dsq1232-432aa"));
         accounts.put("1234", accountDomain);
         repository = new SubscriptionRepository(accounts);
@@ -40,14 +40,14 @@ public class SubscriptionRepositoryTest {
     }
 
     @Test
-    public void shouldDelete() throws Exception {
-        repository.delete("1234");
-        assertThat(repository.all()).isEmpty();
+    public void shouldCancel() throws Exception {
+        repository.cancel("1234");
+        assertThat(repository.find("1234").getStatus()).isEqualTo(Subscription.STATUS.CANCELLED);
     }
 
     @Test(expected = AccountNotFoundException.class)
     public void shouldDeleteFailWhenNoExistAccount() throws Exception {
-        repository.delete("1");
+        repository.cancel("1");
 
     }
 
@@ -72,9 +72,9 @@ public class SubscriptionRepositoryTest {
 
         Subscription updated = repository.find("1234");
 
-        assertThat(updated.getSubscription().getPricingDuration()).isEqualTo("ANNUAL");
-        assertThat(updated.getSubscription().getEditionCode()).isEqualTo("PREMIUM");
-        assertThat(updated.getSubscription().getItems()).extracting("unit", "quantity").contains(tuple("USER", 1));
+        assertThat(updated.getOrder().getPricingDuration()).isEqualTo("ANNUAL");
+        assertThat(updated.getOrder().getEditionCode()).isEqualTo("PREMIUM");
+        assertThat(updated.getOrder().getItems()).extracting("unit", "quantity").contains(tuple("USER", 1));
     }
 
     @Test(expected = AccountNotFoundException.class)

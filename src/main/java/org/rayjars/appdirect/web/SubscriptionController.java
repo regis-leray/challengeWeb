@@ -24,7 +24,7 @@ public class SubscriptionController extends AbstractController {
 
         Subscription account = new Subscription()
                 .setCompany(event.getPayload().getCompany())
-                .setSubscription(event.getPayload().getOrder());
+                .setOrder(event.getPayload().getOrder());
 
         Subscription created = accountDao.create(account);
 
@@ -47,13 +47,12 @@ public class SubscriptionController extends AbstractController {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public Result cancel(@RequestParam(value = "url") String url) throws AppException {
-
         Event event = signAndfetch(url);
 
         String accountIdentifier = getAccountIdentifier(event);
-        accountDao.delete(accountIdentifier);
+        accountDao.cancel(accountIdentifier);
 
-        return ResponseHelper.success("The subscription has been deleted id = "+ accountIdentifier);
+        return ResponseHelper.success("The subscription has been canceled id = "+ accountIdentifier);
     }
 
 }

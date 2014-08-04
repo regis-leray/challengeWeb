@@ -12,16 +12,16 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/")
 public class IndexController {
 
-    private SubscriptionRepository accountDAO;
+    private SubscriptionRepository repository;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView index(ModelMap model) {
         return new ModelAndView("index")
-                .addObject("accounts", accountDAO.all());
+                .addObject("subscriptions", repository.all());
     }
 
     @Autowired
-    public void setAccountDAO(SubscriptionRepository accountDAO) {
-        this.accountDAO = accountDAO;
+    public void setRepository(SubscriptionRepository repository) {
+        this.repository = repository;
     }
 }
