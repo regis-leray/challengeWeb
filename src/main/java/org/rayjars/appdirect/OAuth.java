@@ -31,11 +31,10 @@ public final class OAuth {
     public void validate(HttpServletRequest request) throws UnauthorizedException {
 
         try {
-            logger.debug("Request URL {}", request.getRequestURL().toString());
-
+            logger.debug("Request Method {} - URL {}",request.getMethod(), request.getRequestURL().toString());
 
             //we shouldnt pass url parameters, Authorization is in the header
-            OAuthMessage oauthMessage = new OAuthMessage("GET", request.getRequestURL().toString(), getParameters(request));
+            OAuthMessage oauthMessage = new OAuthMessage(request.getMethod(), request.getRequestURL().toString(), getParameters(request));
 
             //OAuthServlet.getMessage(request, null);
             OAuthConsumer consumer = new OAuthConsumer(null, consumerKey, consumerSecret, null);
