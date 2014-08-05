@@ -19,7 +19,7 @@ import java.net.URL;
 @RequestMapping("/openid")
 public class OpenIdController {
 
-    @RequestMapping(value = "/", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView index() {
         return new ModelAndView("login");
     }

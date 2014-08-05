@@ -14,7 +14,7 @@ public class IndexController {
 
     private SubscriptionRepository repository;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public ModelAndView index(ModelMap model) {
         return new ModelAndView("index")
                 .addObject("subscriptions", repository.all());
