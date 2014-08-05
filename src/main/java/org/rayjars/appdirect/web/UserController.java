@@ -20,7 +20,7 @@ public class UserController extends AbstractController {
         Event event = signAndfetch(url);
         String id = getAccountIdentifier(event);
         User user = event.getPayload().getUser();
-        accountDao.assignUser(id, user);
+        repository.assignUser(id, user);
 
         return ResponseHelper.success("Assign user with success "+user.getUuid());
     }
@@ -34,7 +34,7 @@ public class UserController extends AbstractController {
         Event event = signAndfetch(url);
         String id = getAccountIdentifier(event);
         User user = event.getPayload().getUser();
-        accountDao.unassignUser(id, user);
+        repository.unassignUser(id, user);
 
         return ResponseHelper.success("UnAssign user with success "+user.getUuid());
     }

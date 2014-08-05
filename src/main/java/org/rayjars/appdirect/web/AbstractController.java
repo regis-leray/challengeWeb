@@ -13,7 +13,7 @@ public abstract class AbstractController {
 
     protected OAuth oAuth;
 
-    protected SubscriptionRepository accountDao;
+    protected SubscriptionRepository repository;
 
     protected Event signAndfetch(String url) throws UnknownErrorException {
               String signUrl = oAuth.signUrl(url);
@@ -36,8 +36,8 @@ public abstract class AbstractController {
 
 
     @Autowired
-    public void setAccountDao(SubscriptionRepository accountDao) {
-        this.accountDao = accountDao;
+    public void setRepository(SubscriptionRepository repository) {
+        this.repository = repository;
     }
 
 

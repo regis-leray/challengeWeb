@@ -17,6 +17,10 @@ public final class ResponseHelper {
 
     }
 
+    public static Result success(){
+        return success(null);
+    }
+
     public static Result success(String message) {
         return success(message, null);
     }

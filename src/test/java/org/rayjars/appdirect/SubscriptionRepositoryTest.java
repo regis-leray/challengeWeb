@@ -40,14 +40,14 @@ public class SubscriptionRepositoryTest {
     }
 
     @Test
-    public void shouldCancel() throws Exception {
-        repository.cancel("1234");
-        assertThat(repository.find("1234").getStatus()).isEqualTo(Subscription.STATUS.CANCELLED);
+    public void shouldDelete() throws Exception {
+        repository.delete("1234");
+        assertThat(repository.all().isEmpty()).isEqualTo(true);
     }
 
     @Test(expected = AccountNotFoundException.class)
     public void shouldDeleteFailWhenNoExistAccount() throws Exception {
-        repository.cancel("1");
+        repository.delete("1");
 
     }
 
@@ -79,7 +79,18 @@ public class SubscriptionRepositoryTest {
 
     @Test(expected = AccountNotFoundException.class)
     public void shouldUpdateFailWhenAccountNotFound() throws Exception {
-        repository.update("1", null);
+        repository.update("1", (Order)null);
+    }
+
+    @Test(expected = AccountNotFoundException.class)
+    public void shouldUpdateStatusFailWhenAccountNotFound() throws Exception {
+        repository.update("1", (Subscription.STATUS)null);
+    }
+
+    @Test
+    public void shouldUpdateStatusWhenAccountExist() throws Exception {
+        repository.update("1234", Subscription.STATUS.SUSPENDED);
+        assertThat(repository.find("1234").getStatus()).isEqualTo(Subscription.STATUS.SUSPENDED);
     }
 
     @Test

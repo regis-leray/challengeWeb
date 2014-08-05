@@ -16,6 +16,7 @@ import org.rayjars.appdirect.exceptions.UnknownErrorException;
 import org.rayjars.appdirect.xml.XmlReader;
 import org.rayjars.appdirect.xml.beans.Account;
 import org.rayjars.appdirect.xml.beans.Event;
+import org.rayjars.appdirect.xml.beans.Notice;
 import org.rayjars.appdirect.xml.beans.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -142,7 +143,7 @@ public class SubscriptionControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_XML))
                 .andExpect(xpath("/result/success").booleanValue(true))
-                .andExpect(xpath("/result/message").string(containsString("The subscription has been canceled")))
+                .andExpect(xpath("/result/message").string(containsString("The subscription has been deleted")))
                 .andExpect(xpath("/result/errorCode").doesNotExist());
     }
 
@@ -152,7 +153,7 @@ public class SubscriptionControllerTest {
         Event event = emptyEvent();
         event.getPayload().setAccount(new Account("1234"));
         when(xmlReader.read(anyString(), Matchers.<Class<Object>>any())).thenReturn(event);
-        doThrow(new AccountNotFoundException("Not found subscription with 1234")).when(accountDao).cancel(anyString());
+        doThrow(new AccountNotFoundException("Not found subscription with 1234")).when(accountDao).delete(anyString());
 
         mockMvc.perform(get("/subscription/cancel")
                 .param("url", "https://www.appdirect.com/rest/api/events/dummyCancel")
@@ -165,6 +166,42 @@ public class SubscriptionControllerTest {
     }
 
 
+
+    @Test
+    public void shouldNoticeWhenAccountExist() throws Exception {
+        Event event = emptyEvent();
+        event.getPayload().setAccount(new Account("1234"));
+        event.getPayload().setNotice(new Notice().setType("DEACTIVATED"));
+        when(xmlReader.read(anyString(), Matchers.<Class<Object>>any())).thenReturn(event);
+
+        mockMvc.perform(get("/subscription/notice")
+                        .param("url", "https://www.appdirect.com/rest/api/events/dummyNotice")
+        )
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_XML))
+                .andExpect(xpath("/result/success").booleanValue(true))
+                .andExpect(xpath("/result/message").doesNotExist())
+                .andExpect(xpath("/result/errorCode").doesNotExist());
+    }
+
+
+    @Test
+    public void shouldNoticeFailWhenAccountDontExist() throws Exception {
+        Event event = emptyEvent();
+        event.getPayload().setAccount(new Account("1234"));
+        event.getPayload().setNotice(new Notice().setType("CLOSED"));
+        when(xmlReader.read(anyString(), Matchers.<Class<Object>>any())).thenReturn(event);
+        doThrow(new AccountNotFoundException("Not found subscription with 1234")).when(accountDao).delete(anyString());
+
+        mockMvc.perform(get("/subscription/notice")
+                        .param("url", "https://www.appdirect.com/rest/api/events/dummyNotice")
+        )
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_XML))
+                .andExpect(xpath("/result/success").booleanValue(false))
+                .andExpect(xpath("/result/message").string(containsString("Not found subscription with 1234")))
+                .andExpect(xpath("/result/errorCode").string("ACCOUNT_NOT_FOUND"));
+    }
 
 
 }

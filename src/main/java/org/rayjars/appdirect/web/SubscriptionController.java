@@ -1,6 +1,8 @@
 package org.rayjars.appdirect.web;
 
+import org.rayjars.appdirect.NoticeType;
 import org.rayjars.appdirect.Subscription;
+import org.rayjars.appdirect.exceptions.AccountNotFoundException;
 import org.rayjars.appdirect.exceptions.AppException;
 import org.rayjars.appdirect.exceptions.UnknownErrorException;
 import org.rayjars.appdirect.xml.beans.Event;
@@ -26,7 +28,7 @@ public class SubscriptionController extends AbstractController {
                 .setCompany(event.getPayload().getCompany())
                 .setOrder(event.getPayload().getOrder());
 
-        Subscription created = accountDao.create(account);
+        Subscription created = repository.create(account);
 
         return ResponseHelper.success("Subscription creation successful", created.getId());
     }
@@ -38,9 +40,9 @@ public class SubscriptionController extends AbstractController {
 
         Event event = signAndfetch(url);
         String accountIdentifier = getAccountIdentifier(event);
-        Subscription updated = accountDao.update(accountIdentifier, event.getPayload().getOrder());
+        Subscription updated = repository.update(accountIdentifier, event.getPayload().getOrder());
 
-        return ResponseHelper.success("The subscription has been updated id = "+ updated.getId());
+        return ResponseHelper.success("The subscription has been updated id = " + updated.getId());
     }
 
     @RequestMapping(value = "/cancel", method = RequestMethod.GET)
@@ -50,9 +52,40 @@ public class SubscriptionController extends AbstractController {
         Event event = signAndfetch(url);
 
         String accountIdentifier = getAccountIdentifier(event);
-        accountDao.cancel(accountIdentifier);
+        repository.delete(accountIdentifier);
 
-        return ResponseHelper.success("The subscription has been canceled id = "+ accountIdentifier);
+        return ResponseHelper.success("The subscription has been deleted id = " + accountIdentifier);
+    }
+
+    @RequestMapping(value = "/notice", method = RequestMethod.GET)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public Result notice(@RequestParam(value = "url") String url) throws AppException {
+        Event event = signAndfetch(url);
+
+        String accountIdentifier = getAccountIdentifier(event);
+        String type = event.getPayload().getNotice().getType();
+        NoticeType noticeType = NoticeType.valueOf(type);
+
+        switch (noticeType) {
+            case CLOSED:
+                repository.delete(accountIdentifier);
+                break;
+            case DEACTIVATED:
+                repository.update(accountIdentifier, Subscription.STATUS.SUSPENDED);
+                break;
+            case REACTIVATED:
+                repository.update(accountIdentifier, Subscription.STATUS.ACTIVE);
+                break;
+            case UPCOMING_INVOICE:
+                repository.update(accountIdentifier, Subscription.STATUS.ACTIVE);
+                break;
+
+            default:
+                throw new UnknownErrorException("Notice type '" + type + "' doesnt exist");
+        }
+
+        return ResponseHelper.success();
     }
 
 }

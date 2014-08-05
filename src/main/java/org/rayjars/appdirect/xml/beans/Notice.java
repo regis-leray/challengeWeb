@@ -13,7 +13,8 @@ public class Notice {
         return type;
     }
 
-    public void setType(String type) {
+    public Notice setType(String type) {
         this.type = type;
+        return this;
     }
 }
