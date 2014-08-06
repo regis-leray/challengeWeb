@@ -3,14 +3,6 @@ package org.rayjars.appdirect.xml.beans;
 import javax.xml.bind.annotation.*;
 import java.util.UUID;
 
-
-/**
- * @author toantran
- * 
- * 
- *         Class in charge of Creator marshalling and unmarshalling
- *
- */
 @XmlType(propOrder = { "email", "firstName", "language", "lastName", "openId",
 		"uuid" })
 @XmlAccessorType(XmlAccessType.FIELD)
